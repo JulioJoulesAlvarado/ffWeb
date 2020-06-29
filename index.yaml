@@ -1,0 +1,8 @@
+indexes:
+
+- kind: Player
+  properties:
+  - name: position
+  - name: week
+  - name: expectedScore
+    direction: desc
