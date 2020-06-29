@@ -8,4 +8,6 @@ statsCreator: takes the csv's with data and transforms them into stats for the d
 <br>
 geneticAlgo: takes user preferences and generates a lineup using the database
 
-<b>Html pages are in /templates</b>
+<b>HTML pages are in /templates</b>
+
+<b>Examples of CSV files are in csv folder</b>
