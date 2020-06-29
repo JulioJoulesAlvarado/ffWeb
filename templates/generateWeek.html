@@ -1,0 +1,27 @@
+{% extends "ffBase.html" %}
+
+{% block content %}
+		<h1>Generate Data</h1>
+		<form  method= "post">
+		<table>
+			<tr>
+				<td class="label">Select Week</td>
+					<td>
+					<select id="week" name="week">
+						{% for num in range(1,18) %}
+							<option value="Week {{num}}">Week {{num}}</option>
+						{%endfor%}
+					</select>
+					</td>
+					<td class="error">
+						{{weekBool}}
+					</td>
+				</td>
+			</tr>
+			</table>
+			<input type="submit">
+		<form>
+		<div>
+		<a href="/delete" class="main-title">Delete a CSV</a> <a href="/upload" class="main-title">Upload a CSV</a>
+		</div>
+{% endblock %}

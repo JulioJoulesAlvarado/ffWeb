@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style type="text/css">
+      .label {text-align: right}
+      .error {color: red}
+    </style>
+  <link type="text/css" rel="stylesheet" href="/static/main.css" />
+
+  <title>Fantasy Football Lineup Generator</title>
+</head>
+
+<body>
+  <a href="/home" class="main-title">
+    Fantasy Football Lineup Generator
+  </a>
+
+  <div id="content">
+  {% block content %}
+  {% endblock %}
+  </div>
+</body>
+
+<div>
+<footer>
+	<table>
+	<td><a href="/home" class="main-title">Home</a></td>
+	<td><a href="/login" class="main-title">Login</a></td>
+	<td><a href="/logout" class="main-title">Logout</a></td>
+	<td><a href="/signup" class="main-title">Sign Up</a></td>
+
+</footer>
+</div>
+</html>

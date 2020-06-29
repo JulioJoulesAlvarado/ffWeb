@@ -1,0 +1,75 @@
+<html>
+  <head>
+    <title>Sign Up</title>
+    <style type="text/css">
+      .label {text-align: right}
+      .error {color: red}
+    </style>
+
+  </head>
+
+  <body>
+    <h2>Signup</h2>
+    <form method="post">
+      <table>
+        <tr>
+          <td class="label">
+            Username
+          </td>
+		  
+		  <td>
+            <input type="text" name="username" value="{{username}}">
+          </td>
+          <td class="error">
+			{{userBool}}
+          </td>
+        </tr>
+
+        <tr>
+          <td class="label">
+            Password
+          </td>
+          <td>
+            <input type="password" name="password" value="">
+          </td>
+          <td class="error">
+            {{passwordBool}}
+          </td>
+        </tr>
+
+        <tr>
+          <td class="label">
+            Verify Password
+          </td>
+          <td>
+            <input type="password" name="verify" value="">
+          </td>
+          <td class="error">
+			{{verifyBool}}
+          </td>
+        </tr>
+
+        <tr>
+          <td class="label">
+            Email (optional)
+          </td>
+          <td>
+            <input type="text" name="email" value="">
+          </td>
+          <td class="error">
+			{{emailBool}}
+          </td>
+        </tr>
+      </table>
+
+      <input type="submit">
+    </form>
+  </body>
+<footer>
+	<table>
+	<td><a href="/login" class="main-title">Login</a></td>
+	<td><a href="/logout" class="main-title">Logout</a></td>
+	<td><a href="/signup" class="main-title">Sign Up</a></td>
+
+</footer>
+</html>

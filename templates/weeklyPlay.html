@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<head>
+  <title>Weekly Play for {{week}}</title>
+</head>
+<body>
+
+  <h1>Weekly Play for {{week}}</h1>
+
+<h2>Lineup Option</h2>
+<table border="2">
+<tr>
+	<tr>
+	<td>Position</td>
+	<td>Player</td>
+	<td> Projected Score</td>
+	<td>Salary</td>
+	</tr>
+</tr>
+{% set ns = namespace(points=0,salary=0) %}
+
+{% for player in team['QB'] %}  
+	{% set ns.points = ns.points + player['expectedScore']%}
+	{% set ns.salary = ns.salary + player['salary']%}
+	<tr>
+	<td>QB</td>
+	<td>{{player['name']}} </td>
+	<td> {{player['expectedScore']}}</td>
+	<td>{{player['salary']}} </td>
+	</tr>
+{% endfor %}
+
+{% for player in team['RB']: %}
+	{% set ns.points = ns.points + player['expectedScore']%}
+	{% set ns.salary = ns.salary + player['salary']%}
+	<tr>
+	<td>RB</td>
+	<td>{{player['name']}} </td>
+	<td> {{player['expectedScore']}}</td>
+	<td>{{player['salary']}} </td>
+	</tr>
+{% endfor %}
+
+{% for player in team['WR']: %}  
+	{% set ns.points = ns.points + player['expectedScore']%}
+	{% set ns.salary = ns.salary + player['salary']%}
+	<tr>
+	<td>WR</td>
+	<td>{{player['name']}} </td>
+	<td> {{player['expectedScore']}}</td>
+	<td>{{player['salary']}} </td>
+	</tr>
+{% endfor %}
+{% for player in team['TE']: %}  
+	{% set ns.points = ns.points + player['expectedScore']%}
+	{% set ns.salary = ns.salary + player['salary']%}
+	<tr>
+	<td>TE</td>
+	<td>{{player['name']}} </td>
+	<td> {{player['expectedScore']}}</td>
+	<td>{{player['salary']}} </td>
+	</tr>
+{% endfor %}
+{% for player in team['Flex']: %} 
+	{% set ns.points = ns.points + player['expectedScore']%}
+	{% set ns.salary = ns.salary + player['salary']%}
+	<tr>
+	<td>Flex  </td>
+	<td>{{player['name']}} </td>
+	<td> {{player['expectedScore']}}</td>
+	<td>{{player['salary']}} </td>
+	</tr>
+{% endfor %}
+	<tr>
+	<td>Total</td>
+	<td></td>
+	<td> {{ns.points}}</td>
+	<td>{{ns.salary}} </td>
+	</tr>
+</table>
+</body>
+</html>

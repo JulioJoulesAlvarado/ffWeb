@@ -1,0 +1,54 @@
+{% extends "ffBase.html" %}
+
+{% block content %}
+		<h1>Upload A CSV</h1>
+		<form enctype="multipart/form-data" method= "post">
+		<table>
+			<tr>
+				<td class="label">Select Week</td>
+					<td>
+					<select id="week" name="week">
+						{% for num in range(1,18) %}
+							<option value="Week {{num}}">Week {{num}}</option>
+						{%endfor%}
+					</select>
+					<td>
+				<td>
+			</tr>
+			<tr>
+				<td class="label">Select Position</td>
+					<td>
+					<select id="position" name="position">
+						<option value="QB">QB</option>
+						<option value="RB">RB</option>
+						<option value="TE">TE</option>
+						<option value="WR">WR</option>
+						<option value="Offense">Offense</option>
+						<option value="Defense">Defense</option>
+						<option value="Vegas">Vegas</option>
+						<option value="Fanduel">Fanduel</option>
+					</select>
+					</td>
+				</td>
+			</tr>
+			<tr>
+				<td class="label">
+					Select File
+				</td>
+		  
+				<td>
+					<input type="file" name="filePath" value="">
+				</td>
+				<td class="error">
+					{{fileBool}}
+				</td>
+				<br>
+				
+			</tr>
+			</table>
+			<input type="submit">
+		<form>
+		<div>
+		<a href="/delete" class="main-title">Delete a CSV</a> <a href="/generate" class="main-title">Generate</a>
+		</div>
+{% endblock %}
