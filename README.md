@@ -2,21 +2,21 @@
 
 <b>3 Big Files</b>
 
-main: runs the website. Directory info, login, signup, and calls other functions
+main.py: runs the website. Directory info, login, signup, and calls other functions
 <p>
-statsCreator: takes the csv's with data and transforms them into stats for the database.
+statsCreator.py: takes the csv's with data and transforms them into stats for the database.
 </p>
 <p>
-database: handles all of the data entry, updating, and delition from cloud. Returns Queries in list format.
+database.py: handles all of the data entry, updating, and delition from cloud. Returns Queries in list format.
 </p>
 <p>
-Player: Class for Player. Instantiates player with stats. Has method to convert Class into data for the database to process.
+Player.py: Class for Player. Instantiates player with stats. Has method to convert Class into data for the database to process.
 </p>
 <p>
-QB,RB,WR,TE: Inherits from PLayer. Only new method is each individual class calculates expected Scores differently.
+QB.py,RB.py,WR.py,TE.py: Inherits from PLayer. Only new method is each individual class calculates expected Scores differently.
 </p>
 <p>
-geneticAlgo: takes user preferences and generates a lineup using the database and user preferences.
+geneticAlgo.py: takes user preferences and generates a lineup using the database and user preferences.
 </p>
 <p>
 <b>HTML pages are in /templates</b>
