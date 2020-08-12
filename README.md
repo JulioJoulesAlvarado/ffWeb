@@ -1,6 +1,6 @@
 <b>This is a website that generates a Daily Fantasy Football Lineup based on preferences</b>
 
-<b>3 Big Files</b>
+<b>Backend Files</b>
 
 main.py: runs the website. Directory info, login, signup, and calls other functions
 <p>
