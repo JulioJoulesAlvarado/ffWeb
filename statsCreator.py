@@ -37,15 +37,13 @@ def createVegas(week, bucket_name):
     
     args=['team','TDs']
     
-    i=0
-    for line in lines:
+    
+    for line in lines[1:]:
         columns=line.split(',')
-        
-        if i>0:
-            if(len(columns)>1):
-                argsVals=[columns[8]+week,float(columns[6])/7]
-                insertIntoDatabase('Team',args, argsVals)
-        i=i+1
+                
+        if(len(columns)>1):
+            argsVals=[columns[8]+week,float(columns[6])/7]
+            insertIntoDatabase('Team',args, argsVals)
 
 #takes Deffense.csv and pulls out teams. Queries for a team. Pulls average info and creates the league average  
 def createDefense(week, bucket_name):
@@ -57,28 +55,27 @@ def createDefense(week, bucket_name):
     
     league_pass_avg=0
     league_rush_avg=0
-    i=0
+    
     
     teamArgs=['pass_avg_allowed','rush_avg_allowed']
     
-    for line in lines:
+    for line in lines[1:]:
         columns=line.split(',')
         
-        if i>0:
-            if(len(columns)>1):
-                teamname=columns[9]               
-                #find entity
-                results=queryDatabase('Team',['team'],[teamname+week])
+        if(len(columns)>1):
+            teamname=columns[9]               
+            #find entity
+            results=queryDatabase('Team',['team'],[teamname+week])
                 
-                if(len(results)!=0):
-                    front=results[0]
-                    teamArgsVals=[float(columns[1]),float(columns[2])]
+            if(len(results)!=0):
+                front=results[0]
+                teamArgsVals=[float(columns[1]),float(columns[2])]
                     
-                    updateData(front, teamArgs, teamArgsVals)
+                updateData(front, teamArgs, teamArgsVals)
                 
-                league_pass_avg=(league_pass_avg)+float(columns[1])
-                league_rush_avg=(league_rush_avg)+float(columns[2]) 
-        i=i+1
+            league_pass_avg=(league_pass_avg)+float(columns[1])
+            league_rush_avg=(league_rush_avg)+float(columns[2]) 
+       
     
     leagueArgs=['week','pass_avg','rush_avg']
     leagueArgsVals=[week,league_pass_avg/32,league_rush_avg/32]
@@ -93,25 +90,23 @@ def createTeamOffense(week, bucket_name):
     file=serveFile(defense_doc,bucket_name)
     lines = file.decode("ASCII").split('\n')    
     
-    i=0
     teamArgs=['pass_avg','rush_avg','pass_TD_avg','rush_TD_avg']
     
-    for line in lines:
+    for line in lines[1:]:
         columns=line.split(',')
         
-        if i>0:
-            if(len(columns)>1):
-                teamname=columns[9]
+        
+        if(len(columns)>1):
+            teamname=columns[9]
                 
-                #find entity
-                results=queryDatabase('Team',['team'],[teamname+week])
-                
-                if(len(results)!=0):
-                    front=results[0]
+            #find entity
+            results=queryDatabase('Team',['team'],[teamname+week])
+            
+            if(len(results)!=0):
+                front=results[0]
                     
-                    teamArgsVals=[float(columns[1]),float(columns[2]),float(columns[3]),float(columns[4])]
-                    updateData(front, teamArgs, teamArgsVals)           
-        i=i+1
+                teamArgsVals=[float(columns[1]),float(columns[2]),float(columns[3]),float(columns[4])]
+                updateData(front, teamArgs, teamArgsVals)           
 
 #some data has weird team names. Translate it to make it consistent for database purpose        
 def getOpponent(opp):
@@ -141,67 +136,66 @@ def createPlayers(position, week, bucket_name):
     file=serveFile(player_doc, bucket_name)
     
     lines = file.decode("ASCII").split('\n')
-    i=0
+   
     players={}
-    for line in lines:
+    for line in lines[1:]:
         columns=line.split(',')
-        if i>0:
-            if(len(columns)>1):
-                player_name=columns[1]
-                player_team=getOpponent(columns[2])
-                expectedScore=0
-                expectedTDs=0
-                salary=60000
-                         
-                if position =='QB':
-                    numgames=float(columns[15])/float(columns[16])            
-                    pass_yds=float(columns[6])
-                    rush_yds=float(columns[12])
-                    rec_yds=0
-                    receptions=0               
-                    pass_tds=float(columns[7])
-                    rec_tds=0
-                    rush_tds=float(columns[13])
+        
+        if(len(columns)>1):
+            player_name=columns[1]
+            player_team=getOpponent(columns[2])
+            expectedScore=0
+            expectedTDs=0
+            salary=60000
+                     
+            if position =='QB':
+                numgames=float(columns[15])/float(columns[16])            
+                pass_yds=float(columns[6])
+                rush_yds=float(columns[12])
+                rec_yds=0
+                receptions=0               
+                pass_tds=float(columns[7])
+                rec_tds=0
+                rush_tds=float(columns[13])
             
-                    player=QB(player_name,position,player_team,week,expectedScore,expectedTDs,salary,numgames,pass_yds,rush_yds,rec_yds,receptions, pass_tds,rec_tds,rush_tds)
+                player=QB(player_name,position,player_team,week,expectedScore,expectedTDs,salary,numgames,pass_yds,rush_yds,rec_yds,receptions, pass_tds,rec_tds,rush_tds)
                     
-                elif position == 'RB':
-                    numgames=float(columns[11])/float(columns[12])
-                    pass_yds=0
-                    rush_yds=float(columns[4])
-                    rec_yds=float(columns[8])
-                    receptions=float(columns[7])                  
-                    pass_tds=0
-                    rec_tds=float(columns[9])
-                    rush_tds=float(columns[5])
+            elif position == 'RB':
+                numgames=float(columns[11])/float(columns[12])
+                pass_yds=0
+                rush_yds=float(columns[4])
+                rec_yds=float(columns[8])
+                receptions=float(columns[7])                  
+                pass_tds=0
+                rec_tds=float(columns[9])
+                rush_tds=float(columns[5])
                     
-                    player=RB(player_name,position,player_team,week,expectedScore,expectedTDs,salary,numgames,pass_yds,rush_yds,rec_yds,receptions, pass_tds,rec_tds,rush_tds)
+                player=RB(player_name,position,player_team,week,expectedScore,expectedTDs,salary,numgames,pass_yds,rush_yds,rec_yds,receptions, pass_tds,rec_tds,rush_tds)
                 
-                elif position == 'WR':
-                    numgames=float(columns[11])/float(columns[12])
-                    pass_yds=0
-                    rush_yds=0
-                    rec_yds=(float(columns[4]))
-                    receptions=(float(columns[3]))      
-                    pass_tds=0
-                    rec_tds=(float(columns[5]))
-                    rush_tds=0
-                    
-                    player=WR(player_name,position,player_team,week,expectedScore,expectedTDs,salary,numgames,pass_yds,rush_yds,rec_yds,receptions, pass_tds,rec_tds,rush_tds)
+            elif position == 'WR':
+                numgames=float(columns[11])/float(columns[12])
+                pass_yds=0
+                rush_yds=0
+                rec_yds=(float(columns[4]))
+                receptions=(float(columns[3]))      
+                pass_tds=0
+                rec_tds=(float(columns[5]))
+                rush_tds=0                    
                 
-                elif position == 'TE':
-                    numgames=float(columns[11])/float(columns[12])
-                    pass_yds=0
-                    rush_yds=0
-                    rec_yds=(float(columns[4]))
-                    receptions=(float(columns[3]))      
-                    pass_tds=0
-                    rec_tds=(float(columns[5]))
-                    rush_tds=0
+                player=WR(player_name,position,player_team,week,expectedScore,expectedTDs,salary,numgames,pass_yds,rush_yds,rec_yds,receptions, pass_tds,rec_tds,rush_tds)
+                
+            elif position == 'TE':
+                numgames=float(columns[11])/float(columns[12])
+                pass_yds=0
+                rush_yds=0
+                rec_yds=(float(columns[4]))
+                receptions=(float(columns[3]))      
+                pass_tds=0
+                rec_tds=(float(columns[5]))
+                rush_tds=0
 
-                    player=TE(player_name,position,player_team,week,expectedScore,expectedTDs,salary,numgames,pass_yds,rush_yds,rec_yds,receptions, pass_tds,rec_tds,rush_tds)
-                players[player_name]=player
-        i=i+1
+                player=TE(player_name,position,player_team,week,expectedScore,expectedTDs,salary,numgames,pass_yds,rush_yds,rec_yds,receptions, pass_tds,rec_tds,rush_tds)
+            players[player_name]=player
     return players
 
 #pulls from Fanduel.csv
@@ -212,55 +206,53 @@ def addSalariesExpectation(week, bucket_name,QBs, RBs,WRs, TEs):
     file=serveFile(player_doc, bucket_name)
     
     lines = file.decode("ASCII").split('\n')
-    i=0
         
     results=queryDatabase('League',['week'],[week])
     league=results[0]
     
-    for line in lines:
+    for line in lines[1:]:
         columns=line.split(',')
-        if i>0:
-            if len(columns)>1:
-                    if columns[10] != 'O' and columns[10]!='IR' and columns[10] != 'D' and columns[10]!='Q':
-                        prospect= (columns[2]+ ' '+columns[4])
-                        opponentName=getOpponent(columns[10])
-                        teamName=getOpponent(columns[9])
-                        #search for own team and opponent team
+        
+        if len(columns)>1:
+                if columns[10] != 'O' and columns[10]!='IR' and columns[10] != 'D' and columns[10]!='Q':
+                    prospect= (columns[2]+ ' '+columns[4])
+                    opponentName=getOpponent(columns[10])
+                    teamName=getOpponent(columns[9])
+                    #search for own team and opponent team
                         
-                        results=queryDatabase('Team', ['team'],[teamName+week])                
-                        if(len(results)!=0):
-                            team=results[0]
-                    
-                        results=queryDatabase('Team', ['team'],[opponentName+week])               
-                        if(len(results)!=0):
-                            opp=results[0]   
+                    results=queryDatabase('Team', ['team'],[teamName+week])                
+                    if(len(results)!=0):
+                        team=results[0]
+                
+                    results=queryDatabase('Team', ['team'],[opponentName+week])               
+                    if(len(results)!=0):
+                        opp=results[0]   
                             
-                        salary = float(columns[7])
+                    salary = float(columns[7])
                         
-                        if columns[1]=='QB' or columns[1] == 'RB' or columns[1]=='WR' or columns[1]=='TE':
-                            player = None
-                            if columns[1] == 'QB':
-                                if prospect in QBs:
-                                    player=QBs[prospect]
-                            elif columns[1]== 'RB':
-                                if prospect in RBs:
-                                    player=RBs[prospect]
-                            elif columns[1]== 'WR':
-                                if prospect in WRs:
-                                    player=WRs[prospect]
-                            elif columns[1]== 'TE':
-                                if prospect in TEs:
-                                    player=TEs[prospect]
+                    if columns[1]=='QB' or columns[1] == 'RB' or columns[1]=='WR' or columns[1]=='TE':
+                        player = None
+                        if columns[1] == 'QB':
+                            if prospect in QBs:
+                                player=QBs[prospect]
+                        elif columns[1]== 'RB':
+                            if prospect in RBs:
+                                player=RBs[prospect]
+                        elif columns[1]== 'WR':
+                            if prospect in WRs:
+                                player=WRs[prospect]
+                        elif columns[1]== 'TE':
+                            if prospect in TEs:
+                                player=TEs[prospect]
                                 
-                            if player != None:
-                                player.calcExpectation(float(columns[7]),team,opp,league)
-        i=i+1    
+                        if player != None:
+                            player.calcExpectation(float(columns[7]),team,opp,league)    
 
 #pulled from main. Each of these works on a spreadsheet to generate Entities        
 def generateData(week, bucket_name):
-    #createVegas(week, bucket_name)
-    #createDefense(week, bucket_name)
-    #createTeamOffense(week,bucket_name)
+    createVegas(week, bucket_name)
+    createDefense(week, bucket_name)
+    createTeamOffense(week,bucket_name)
     
     QBs=createPlayers('QB', week, bucket_name)
     RBs=createPlayers('RB', week, bucket_name)

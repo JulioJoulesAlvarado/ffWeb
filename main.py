@@ -17,7 +17,7 @@ import os
 import datetime
 import re
 from flask import Flask, render_template, request, make_response, url_for,redirect
-from statsCreator2 import *
+from statsCreator import *
 from werkzeug.utils import secure_filename
 import hashlib
 from geneticAlgo import *
