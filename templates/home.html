@@ -1,6 +1,7 @@
 {% extends "ffBase.html" %}
 
 {% block content %}
+
 		<h1>Welcome, {{username}}! </h1>
 		<form  method= "get">
 		<table>
@@ -9,17 +10,37 @@
 					<td>
 					<select id="week" name="week">
 						{% for num in range(1,18) %}
-							<option value="Week {{num}}">Week {{num}}</option>
+							{% if week == "Week "+num|string%}
+								<option value="Week {{num}}" selected>Week {{num}}</option>
+							{%else%}
+								<option value="Week {{num}}">Week {{num}}</option>
+							{%endif%}
 						{%endfor%}
 					</select>
 				<tr>
 					<td class="label">Select Position:</td>
 						<td>
 						<select id="position" name="position">
-							<option value="QB">QB</option>
-							<option value="RB">RB</option>
-							<option value="TE">TE</option>
-							<option value="WR">WR</option>
+							{%if position =="QB" %}
+								<option value="QB" selected>QB</option>
+							{%else%}
+								<option value="QB">QB</option>
+							{%endif%}
+							{%if position =="RB" %}
+								<option value="RB" selected>RB</option>
+							{%else%}
+								<option value="RB">RB</option>
+							{%endif%}
+							{%if position =="TE" %}
+								<option value="TE" selected>TE</option>
+							{%else%}
+								<option value="TE">TE</option>
+							{%endif%}
+							{%if position =="WR" %}
+								<option value="WR">WR</option>
+							{%else%}
+								<option value="WR">WR</option>
+							{%endif%}
 						</select>
 						</td>
 					</td>
