@@ -17,10 +17,11 @@ import os
 import datetime
 import re
 from flask import Flask, render_template, request, make_response, url_for,redirect
-from statsCreator import *
+from statsCreator2 import *
 from werkzeug.utils import secure_filename
 import hashlib
 from geneticAlgo import *
+from database import *
 
 
 app = Flask(__name__)
@@ -94,13 +95,6 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
         )
     )
 
-#deletes a file from bucket on google cloud storage  
-def delete_blob(bucket_name, blob_name):
-    storage_client = storage.Client()
-
-    bucket = storage_client.bucket(bucket_name)
-    blob = bucket.blob(blob_name)
-    blob.delete()
 
 #checks if position, offense, defense, and vegas csv are in google cloud storage to generate all data
 def weekReady(week):
@@ -198,23 +192,13 @@ def signup():
         #if is return error, else hash password. then put in database.
         
         if(correct is True):
-            query = datastore_client.query(kind='User')
-            query.add_filter('username','=', user)
-            users=list(query.fetch())
+            users=queryDatabase('User',['username'],[user])
             
             if(len(users) > 0):
                 bools['userBool']="That user already exists."
                 return render_template("sign.html", **bools)
-            else:                
-                u = datastore.Entity(key=datastore_client.key('User'))
-    
-                u.update({
-                    'username': user,
-                    'password': passw,
-                    'email': mail,
-                })
-
-                datastore_client.put(u)
+            else:      
+                insertIntoDatabase('User',['username','password','email'],[user,passw,mail])
                 
                 user_safe=str(make_secure(user))
                 bools['userBool']="Created Entry."
@@ -290,12 +274,7 @@ def delete():
 #this function returns those exclusions by position
 #exclusion is it's own Entity to save in database rather than player
 def doesPlayerHavePreferences(username,week, position):
-    query=datastore_client.query(kind='excluded')
-    query.add_filter('position','=',position)
-    query.add_filter('user','=',username)
-    query.add_filter('week','=',week)
-    excluded=list(query.fetch())
-    
+    excluded=queryDatabase('excluded',['position','user','week'],[position,username,week])   
     if len(excluded)>0:
         return True
     return False
@@ -326,12 +305,8 @@ def home():
                 
                 #checks if the user has made preferences. Pulls out exclusions if there are
                 if doesPlayerHavePreferences(check_secure(username),w, p):
-                    query=datastore_client.query(kind='excluded')
-                    query.add_filter('position','=',p)
-                    query.add_filter('user','=',check_secure(username)),
-                    query.add_filter('week','=',w)
-    
-                    excluded=list(query.fetch())
+
+                    excluded=queryDatabase('excluded',['position','user','week'],[p,check_secure(username),w])
                     excluded=[ex['name'] for ex in excluded]
                     
                     return render_template('home.html',username=check_secure(username),week=w, position=p,players=players,excluded=excluded)
@@ -415,12 +390,7 @@ def createListsPlayers(username,week):
 
 #when a user submits preferences, I delete previous ones to keep the database consistent.
 def deleteExcludes(username, week, position):
-    query=datastore_client.query(kind='excluded')
-    query.add_filter('position','=',position)
-    query.add_filter('user','=',username)
-    query.add_filter('week','=',week)
-    
-    excluded=list(query.fetch())
+    excluded=queryDatabase('excluded',['position','user','week'],[position,username,week])
     
     if len(excluded)>0:
         for ex in excluded:
@@ -431,23 +401,11 @@ def updateExcludeList(excluded,username,week,position):
     deleteExcludes(username, week,position)
     
     for exclude in excluded:
-        x=datastore.Entity(key=datastore_client.key('excluded'))
-        x.update({
-            'user':username,
-            'week': week,
-            'position': position,
-            'name': exclude
-        })
-        datastore_client.put(x)
+        insertIntoDatabase('excluded',['user','week','position','name'],[username,week,position,exclude])
         
 #generates list of players that a user likes to include based on week and position
 def playersWithPreferences(username, week, position):
-    query=datastore_client.query(kind='excluded')
-    query.add_filter('position','=',position)
-    query.add_filter('user','=',username)
-    query.add_filter('week','=',week)
-    
-    excluded=list(query.fetch())
+    excluded=queryDatabase('excluded',['position','user','week'],[position,username,week])
     
     excluded=[ex['name'] for ex in excluded]
     
